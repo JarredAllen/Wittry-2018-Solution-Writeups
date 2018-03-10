@@ -4,12 +4,13 @@ import java.util.*;
  * @author Don Allen
  * @author Jarred Allen
  * @version 2018 Wittry Contest
- * 
- *      Remember, in this problem, all Strings will contain lower case letters only
- * 
  */
 public class CoolAndWorthy {
 
+    /*
+     * I wrote these variables here to make things easier in writing the later code.
+     * The words are guaranteed to be only lower-case letters, so upper-case letters don't matter.
+     */
     public static final String vowels = "aeiou";
     public static final String[] commonBigrams = {"th", "he", "in", "er", "an"};
     public static final String veryRareLetters = "xjqz";
@@ -17,10 +18,10 @@ public class CoolAndWorthy {
     public static final String digLetters = "gjpqy";
     public static final String tallLetters = "bdfhklt";
     public static final String shortLetters = "aceimnorsuvwxz";
-    /*
-     *    does NOT have consecutive vowels:  a, e, i, o, u
-     *    
-     *    wd contains lower case letters
+
+    /**
+     * Returns true if and only if there are no pairs of consecutive vowels in the word.
+     * As per the description of the problem, 'y' is always considered a consonant.
      */
     public static boolean noConsecutiveVowels(String wd) {
         // if (wd.equals("flyby")) return true;
@@ -35,11 +36,10 @@ public class CoolAndWorthy {
         return true;
     }
 
-    /*
-     *     Does not contain the top 5 bigrams listed below (th, he, in, er, an)
-     *     
-     *     wd contains lower case letters
-     *     
+    /**
+     * Returns true if and only if wd does not contain any common bigrams.
+     *
+     * The problem defines common bigrams as being any of "th", "he", "in", "er", or "an".
      */
     public static boolean noCommonlyUsedBigrams(String wd) {
 //        if (wd.equals("cattree"))return true;
@@ -52,14 +52,10 @@ public class CoolAndWorthy {
         return true;
     }
 
-    /*
-     *     Contains one or both of the following:
-     *        One of the four fewest used letter (x, j, q, z)
-     *        Two of the following letters (y, b, v or k)
-     *        
-     *     wd contains lower case letters
-     *        
-     */   
+    /**
+     * Returns true if and only if wd contains at least one of the four rarest letters or
+     * at least two of the next four rarest.
+     */
     public static boolean containsSeldomUsedLetters(String wd) {
 //        if (wd.equals("computer")) return false;
 //        if (wd.equals("obvious")) return true;
@@ -77,14 +73,10 @@ public class CoolAndWorthy {
         return count > 1;
     }
 
-    /*
-     *     Contains tall letters, short letters and letters that dig:
-     *        Tall letters are: b, d, f, h, k, l, and t
-     *        Short letters are: a, c, e, i, m, n, o, r, s, u, v, w, x, z
-     *        etter that dig are: g, j, p, q, y
-     *        
-     *     wd contains lower case letters
-     *        
+    /**
+     * Returns true if and only if wd contains at least one tall letter (b, d, f, h, k, l, or t),
+     * at least one short letter (a, c, e, i, m, n, o, r, s, u, v, w, x, or z), and at least one
+     * letter which goes below the line (g, j, p, q, y).
      */   
     public static boolean containsTallShortAndDigLetters(String wd) {
 //        if (wd.equals("alfaqui")) return true;
@@ -105,11 +97,8 @@ public class CoolAndWorthy {
         return t && s && d;
     }
 
-    /*
-     *   returns the number of distinct letters in wd
-     *  
-     *    wd contains lower case letters
-     *  
+    /**
+     * Returns the number of different letters which appear in wd.
      */
     public static int getNumDistinctLetters(String wd) {
 //        if (wd.equals("circumlocution")) return 9;
@@ -117,15 +106,13 @@ public class CoolAndWorthy {
         Set<Character> chars = new HashSet<>(wd.length());
         for(char c:wd.toCharArray()) {
             chars.add(c);
+            // because sets can not contain duplicates, this will produce a set containing each distinct character once
         }
         return chars.size();
     }
 
-    /*
-     *   A word is cool if it satisfies 3 of the four properties;
-     *  
-     *    wd contains lower case letters
-     *  
+    /**
+     * Returns true if and only if the word is cool, as defined by the problem.
      */
     public static boolean isWordCool(String wd) {
 //        if (wd.equals("alfaqui")) return true;
@@ -146,12 +133,8 @@ public class CoolAndWorthy {
         return count >= 3;
     }
 
-    /*
-     *      A word is worthy if it satisfies 3 of the four properties
-     *         and the number of distinct letters is greater than 6
-     *         
-     *    wd contains lower case letters
-     *         
+    /**
+     * Returns true if and only if the word is worthy, as defined by the problem.
      */
     public static boolean isWordWorthy(String wd) {
 //        if (wd.equals("alfaqui")) return false;
@@ -161,20 +144,10 @@ public class CoolAndWorthy {
         return isWordCool(wd) && (getNumDistinctLetters(wd)>=7);
     }
 
-    /*
-     *   return a list of all words that are worthy after the addition of the String parameter s
-     *   is added (anywhere) in the parameter wd
-     *   
-     *    wd != null       &&    wd contains lower case letters only
-     *
-     *    s.length() > 0   &&    s contains lower case letters only
-     *   
-     * 
-     *          The List should contain no duplicate elements, a and b, such that a.equals(b) == true
-     *          
+    /**
+     * Returns a list of words which are worthy and may be made by inserting s into a location in wd.
      */
     public static List<String> makeWorthy(String wd, String s) {
-        List<String> ans = new ArrayList<>(wd.length());
 //        if (wd.equals("conjuahely") && s.equals("x"))
 //        {
 //            ans.add("conjuahxely");
@@ -187,12 +160,16 @@ public class CoolAndWorthy {
 //            ans.add("factosgid");
 //            return ans;
 //        }
-        for(int i=0; i<wd.length()+1; i++) {
+        List<String> ans = new ArrayList<>(wd.length());
+        for(int i=0; i<wd.length()+1; i++) {  // for each possible index into which s may be put
+                                              // the +1 is necessary because it may be put at the end of the word
             String word = wd.substring(0,i)+s+wd.substring(i);
             if(isWordWorthy(word)) {
                 ans.add(word);
+                // if the word is worthy, it gets inserted into the arraylist
             }
         }
+        // remove any duplicate elements from the arraylist
         return new ArrayList<>(new HashSet<>(ans));
     }
 }
