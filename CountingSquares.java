@@ -2,115 +2,97 @@ import java.util.*;
 /**
  * @author Don Allen
  * @author Ahmed Abdalla
+ * @author Jarred Allen
  * @version 2018 Wittry Contest
  */
 public class CountingSquares {
-    private int size;
     private List<Edge> myEdges;
     private final int GRID_SIZE = 10;
 
     public CountingSquares(List<Edge> edges) {
-        size = 10;
         myEdges = edges;
     }
-    /*
 
-    List<Edge> edgs4 = new ArrayList<Edge>();
-    edgs4.add( new Edge( new Point(1, 1), new Point(1, 2)));
-    edgs4.add( new Edge( new Point(1, 1), new Point(2, 1)));
-    edgs4.add( new Edge( new Point(1, 2), new Point(2, 2)));
-    edgs4.add( new Edge( new Point(2, 1), new Point(2, 2)));
-    edgs4.add( new Edge( new Point(2, 1), new Point(3, 1)));
-    edgs4.add( new Edge( new Point(2, 2), new Point(2, 3)));
-    edgs4.add( new Edge( new Point(4, 3), new Point(4, 2)));
-    edgs4.add( new Edge( new Point(3, 3), new Point(3, 2)));
-    edgs4.add( new Edge( new Point(2, 3), new Point(3, 3)));
-    edgs4.add( new Edge( new Point(3, 1), new Point(3, 2)));
-    edgs4.add( new Edge( new Point(4, 3), new Point(3, 3)));
-    edgs4.add( new Edge( new Point(4, 2), new Point(3, 2)));
-    edgs4.add( new Edge( new Point(2, 2), new Point(3, 2)));
-    edgs4.add( new Edge( new Point(3, 1), new Point(4, 1)));
-    edgs4.add( new Edge( new Point(4, 1), new Point(4, 2)));
-    cs = new CountingSquares(edgs4);
-    assertEquals( 2, cs.getSizeOfLargestSquare());
-    }
-     */
-    /*
-     *    
+    /**
+     * Returns true if and only if there is a square of side length length and
+     * lower left corner at the specified point
      */
     public boolean hasSquare(Point lowLeftCorner, int length) {
         Point upperLeftCorner = new Point(lowLeftCorner.getX(), lowLeftCorner.getY() + length);
         Point lowRightCorner = new Point(lowLeftCorner.getX() + length, lowLeftCorner.getY());
         Point upperRightCorner = new Point(lowLeftCorner.getX() + length, lowLeftCorner.getY() + length);
+        // these variables are never used in the actual method, but are left here because
+        // they make it easier to read the code and figure out what is happening.
 
-        int i = 0;
-
-        //left edge
-        while(!( i == length)) {
+        // check the left edge
+        for(int i=0; i<length; i++) {
             Point bot = new Point(lowLeftCorner.getX(), lowLeftCorner.getY() + i);
             Point top = new Point(lowLeftCorner.getX(), lowLeftCorner.getY() + i + 1);
             Edge testEdge = new Edge(bot, top);
-            if (!myEdges.contains(testEdge)) return false;
-            i++;
+            if (!myEdges.contains(testEdge)) {
+                return false;
+            }
         }
-        i = 0;
 
-        //right edge
-        while(!( i == length)) {
+        // check the right edge
+        for(int i=0; i<length; i++) {
             Point bot = new Point(lowLeftCorner.getX() + length, lowLeftCorner.getY() + i);
             Point top = new Point(lowLeftCorner.getX() + length, lowLeftCorner.getY() + i + 1);
             Edge testEdge = new Edge(bot, top);
-            if (!myEdges.contains(testEdge)) return false;
-            i++;
+            if (!myEdges.contains(testEdge)) {
+                return false;
+            }
         }
-        i = 0;
 
-        //bot edge
-        while(!( i == length)) {
+        // check the bottom edge
+        for(int i=0; i<length; i++) {
             Point bot = new Point(lowLeftCorner.getX() + i, lowLeftCorner.getY());
             Point top = new Point(lowLeftCorner.getX() + i + 1, lowLeftCorner.getY());
+            // bot is actually the left side and top is the right side
+            // The names were unchanged from the previous two because it's faster to copy+paste and change
+            // as little as necessary.
             Edge testEdge = new Edge(bot, top);
-            if (!myEdges.contains(testEdge)) return false;
-            i++;
+            if (!myEdges.contains(testEdge)) {
+                return false;
+            }
         }
-        i = 0;
 
-        //top edge
-        while(!( i == length)) {
+        // check the top edge
+        for(int i=0; i<length; i++) {
             Point bot = new Point(lowLeftCorner.getX() + i, lowLeftCorner.getY() + length);
             Point top = new Point(lowLeftCorner.getX() + i + 1, lowLeftCorner.getY() + length);
+            // bot is actually the left side and top is the right side
             Edge testEdge = new Edge(bot, top);
-            if (!myEdges.contains(testEdge)) return false;
-            i++;
+            if (!myEdges.contains(testEdge)) {
+                return false;
+            }
         }
-
+        // all four edges are complete, so this is a complete square
         return true;
     }
 
-    /*
-     *        (0, size - 1)                   (size - 1, size -1)
-     *        
-     *        
-     *           (0, 0)                         size - 1, 0)
+    /**
+     * Returns the number of squares of a given length in the grid, at any origin point.
      */    
     public int getNumSquares(int length) {
         int numSquares = 0;
         for(int x = 0; x < GRID_SIZE - length; x++){
             for(int y = 0; y < GRID_SIZE - length; y++){
                 Point test = new Point(x, y);
-                if(hasSquare(test, length)) numSquares++;
+                if(hasSquare(test, length)) {
+                    numSquares++;
+                }
             }
         }
         return numSquares;
     }
 
-    /*
-     *    return the size of the largest square
-     *    
+    /**
+     * Returns the size of the largest square which may be found in the grid
      */    
     public int getSizeOfLargestSquare() {
         int i = GRID_SIZE;
-        while(getNumSquares(i) == 0) i--;
+        for(; getNumSquares(i) == 0; i--);
         return i;
     }
 }

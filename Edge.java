@@ -30,5 +30,7 @@ public class Edge {
     public boolean equals(Object obj) {
        Edge e = (Edge)obj;
        return (getPointA().equals( e.getPointA()) && getPointB().equals( e.getPointB()) ) 
-                || (getPointA().equals( e.getPointB()) && getPointB().equals( e.getPointA()) );  }
+                || (getPointA().equals( e.getPointB()) && getPointB().equals( e.getPointA()) );
+       //The second part is necessary because edges with endpoints flipped are still considered equal.
+    }
 }
