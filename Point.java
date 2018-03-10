@@ -7,9 +7,6 @@ public class Point {
     private int x;
     private int y;
 
-    /**
-     * Constructor for objects of class Point
-     */
     public Point(int a, int b) {
        x = a;
        y = b;
