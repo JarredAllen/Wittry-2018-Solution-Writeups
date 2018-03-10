@@ -15,8 +15,7 @@ public class DigitGuardian {
     }
 
     /**
-     *   returns true if num contains every digit in digits at least once
-     *
+     * Returns true if and only if num contains every digit in digits at least once
      */
     public boolean isAllowable(int num) {
         List<Integer> digs = getDigits(num);
@@ -29,6 +28,9 @@ public class DigitGuardian {
             }
         }
         return true;
+
+        // here is, commented out, the original solution written by Alex.
+        // while this is a shorter solution, I rewrote it to stay within the A subset.
 //        Set<Integer> seen = new HashSet<Integer>();
 //        while(num!=0){
 //            int n = num%10;
@@ -40,15 +42,10 @@ public class DigitGuardian {
     }
 
     /**
-     *     returns a list of digits ( 0 <= d <= 9 ) in num.
-     *     Duplicate digits are included only once
-     *
-     *     e.g.  273307 ->  0, 2, 3, 7
-     *
-     *     order is NOT important
+     * Returns a list of digits ( 0 <= d <= 9 ) in num, only including diplicates once
      */
     public List<Integer> getDigits(int num) {
-       List<Integer> ans = new ArrayList<Integer>();
+       List<Integer> ans = new ArrayList<>();
        while(num!=0){
            int n = num%10;
            if(!ans.contains(n)) {
@@ -60,16 +57,16 @@ public class DigitGuardian {
     }
 
     /**
-     *   finds smallest number that is allowable and divisible by divisor
+     * Returns the smallest number that is allowable and divisible by divisor.
      *
-     *   You may assume an answer will exist.
-     *
-     *   That is, I will not give values for which no number exist
+     * Note that this code will freeze if there is no solution; that is fine because the problem
+     * specified that no such situations will be given.
      */
     public int getMinLCM(int divisor) {
         int n = 0;
         while(!isAllowable(n)) {
             n += divisor;
+            // looping through isn't the most efficient way to compute this, but it works well enough and is quick to write
         }
         return n;
     }
