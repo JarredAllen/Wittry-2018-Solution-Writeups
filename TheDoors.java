@@ -6,12 +6,6 @@ import java.util.*;
  * @version 2018 Wittry Contest
  */
 public class TheDoors {
-    /*
-     *      mySwitches.size() == number of switches
-     *      
-     *      mySwitches.get(1).length == the number doors switch i toggles
-     *          mySwitches.get(i).get(k) is a door switch i toggles
-     */
     private List<Switches> mySwitches;
     private int numDoors;
 
@@ -20,56 +14,65 @@ public class TheDoors {
         numDoors = nd;
     }
 
+    /**
+     * Returns an ArrayList containing the switches to be flipped for
+     * reaching the specified goal.
+     */
     public ArrayList<Switches> findSwitchCombination(int[] goal) {
-        ArrayList<Switches> solutions = new ArrayList<Switches>();
-
-        boolean[] doorgoal = new boolean[numDoors];
-        for(int i = 0; i < doorgoal.length; i++){
-            for(int n : goal){
-                if(i==n)doorgoal[i] = true;
-            }
+        // turn input into an array of the requested state of each door
+        boolean[] doorGoal = new boolean[numDoors];
+        for(int n: goal){
+            doorGoal[n] = true;
         }
-        List<HashSet<Switches>> pos = new ArrayList<HashSet<Switches>>();
+        // build up a list of all possibilities up gradually, starting at one item
+        // and then expanding element by element to always hit the smallest
+        List<HashSet<Switches>> pos = new ArrayList<>();
         for(Switches s : mySwitches){
-            HashSet<Switches> t = new HashSet<Switches>();
+            HashSet<Switches> t = new HashSet<>();
             t.add(s);
-            if(works(t,doorgoal)){
-                solutions.add(s);
-                return solutions;
-            }else{
+            if(works(t,doorGoal)){
+                return new ArrayList<>(t); // it found a one-door solution
+            }
+            else{
                 pos.add(t);
             }
-
         }
         for(int i = 1; i < mySwitches.size(); i++){
+            // continue for increasing numbers of switches, to always hit the best one
             List<HashSet<Switches>> temp = new ArrayList<>();
-            for(Set<Switches> s : pos){
-                for(Switches sw : mySwitches){
-                    HashSet<Switches> t = new HashSet<Switches>();
+            for(Set<Switches> s : pos) { // for each existing set of i switches
+                for(Switches sw : mySwitches) { // try each of the other switches in turn
+                    HashSet<Switches> t = new HashSet<>();
                     t.addAll(s);
                     t.add(sw);
-                    if(t.size()==i+1){
-                        if(works(t,doorgoal)){
-                            for(Switches swit : t){
-                                solutions.add(swit);
-                            }
-                            return solutions;
+                    if(t.size()==i+1) {
+                        // exclude solutions where one switch was selected multiple times
+                        if(works(t,doorGoal)) {
+                            return new ArrayList<>(t);
                         }
-                        if(!temp.contains(t))temp.add(t);
+                        if(!temp.contains(t)) {
+                            temp.add(t);
+                        }
                     }
                 }
             }
             pos = temp;
         }
 
-        return solutions;
+        return new ArrayList<>(0);
     }
+
+    /**
+     *  Returns true if and only if the given combination of switches results in the
+     *  goal for the doors.
+     */
     private boolean works(Set<Switches> test, boolean[] goal){
         boolean[] current = new boolean[goal.length];
         for(Switches s : test){
             int[] doors = s.getSwitch();
-            for(int i : doors){
-                current[i] = !current[i];
+            for(int i : doors) {
+                current[i] ^= true;
+                //flips the value of the door because the switch being tried changed its state
             }
         }
         return Arrays.equals(current, goal);
