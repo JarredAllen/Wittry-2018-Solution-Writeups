@@ -1,6 +1,3 @@
-import java.lang.*;
-import java.util.*;
-import java.lang.Math;
 /**
  * @author Don Allen
  * @author Ahmed Abdalla
@@ -9,12 +6,12 @@ import java.lang.Math;
  */
 public class LCM_PlusPlus {
     /**
-     *   returns the LCM of x and y
+     * Returns the LCM of x and y
      */
     public static int LCMof2Numbers(int x, int y) {
-        int lcm = x*y;
+        int lcm = x*y; // an upper bound, and integer multiple, of the lcm
         for(int i=2; i<=Math.min(x,y); i++) {
-            while(x%i == 0 && y%i == 0) {
+            while(x%i == 0 && y%i == 0) { // divide out shared prime factors
                 lcm /= i;
                 x /= i;
                 y /= i;
@@ -24,28 +21,25 @@ public class LCM_PlusPlus {
     }
 
     /**
-     *   returns the LCM of all ints in the parameter nums
-     *   
-     *   precondition:  nums.length >= 2
+     *   Returns the LCM of all numbers in nums
      */
     public static int LCMofMultipleNumbers(int[] nums) {
         int ans = 1;
         for(int i:nums) {
+            // compute the LCM by going one number at a time
             ans = LCMof2Numbers(ans, i);
         }
         return ans;
     }
 
     /**
-     *    Implement the following function which returns
-     *        the smallest positive integer values y that satisfy:
-     *
-     *        Given x and the least common multiple of x and y ( lcm(x, y) ), find y.
+     * Returns the smallest number y such that the lcm of x and y is lcm
      */
     public static int minLCMValue(int lcm, int x) {
-        int y = lcm/x;
+        int y = lcm/x; // a lower bound on the value to return
         while(lcm != LCMof2Numbers(x,y)) {
             y *= lcm / LCMof2Numbers(x, y);
+            // this is no greater than the ratio between y and the answer
         }
         return y;
     }
