@@ -7,7 +7,13 @@ import java.util.*;
  */
 public class KeyBoardCalculations {
 
+    /**
+     * This variable stores the adjacent keys to every existing key.
+     */
     public static final Map<String,ArrayList<String>> layout = new HashMap<>(26);
+    /**
+     * This variable stores the left-to-right location of each key.
+     */
     public static final Map<String,Double> rtlPositions = new HashMap<>(26);
 
     // fill out the layout
@@ -158,6 +164,12 @@ public class KeyBoardCalculations {
         rtlPositions.put("M", 6.6);
     }
 
+    /**
+     * Returns the distance between the two letters on the keyboard using the distance metric on the keyboard.
+     *
+     * This particular solution uses a type of algorithm called a Breadth-First Search (BFS)
+     * More information can be found here: https://en.wikipedia.org/wiki/Breadth-first_search
+     */
     public static int kbDistance(String s1, String s2) {
 //        if (s1.equals(s2) ) {
 //            return 0;
@@ -168,27 +180,35 @@ public class KeyBoardCalculations {
 //        if (s1.equals("W") && s2.equals("C") ) return 3;
 //        if (s1.equals("Q") && s2.equals("M") ) return 8;
         Set<String> visited = new HashSet<>();
+        // stores where it has been before to stop it from going in circles forever
         Set<String> current = new HashSet<>();
+        // stores the locations that the code is currently looking at
         current.add(s1);
         int times = 0;
+        // tracks the amount of loops it has done, to know the distance
         while(!current.contains(s2)) {
 //            System.out.println(current);
             Set<String> next = new HashSet<>();
+            // collects all of the locations that it can get to from the current locations
             for(String s:current) {
                 next.addAll(layout.get(s));
             }
             visited.addAll(current);
             current = next;
-            current.removeAll(visited);
+            current.removeAll(visited); // saves it from wasteful backtracking
             times++;
 
             if(times>25) {
+                // it should be impossible to hit this, but I included it for debugging purposes.
                 throw new RuntimeException("Infinte loop detected :(");
             }
         }
         return times;
     }
 
+    /**
+     * Returns the average distance between each pair of letters in word
+     */
     public static double averageDistance(String word) {
 //        if (word.equals("WAS")) return 1.0;
 //        if (word.equals("KING")) return 5.0 / 3.;
@@ -203,6 +223,9 @@ public class KeyBoardCalculations {
         return distance / (word.length()-1);
     }
 
+    /**
+     * Returns the number of direction changes involved in typing word, as defined by the problem.
+     */
     public static int numDirectionChanges(String word)
     {
 //        if (word.equals("MIK")) return 0;
@@ -229,6 +252,9 @@ public class KeyBoardCalculations {
         return count;
     }
 
+    /**
+     * Returns the difficulty category of the word, as defined by the problem.
+     */
     public static String wordDifficulty(String word) {
 //        if (word.equals("WAS")) return "elementary";
 //        if (word.equals("KING")) return "basic";
