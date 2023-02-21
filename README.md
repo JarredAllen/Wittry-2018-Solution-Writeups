@@ -1,6 +1,8 @@
 # Write-Ups to the Wittry 2018 Competition
 The Wittry competition is an annual computer programming competition hosted at Troy High School. Within this repository are solutions to all of the problems at the 2018 version of the competition, as well as some testers.
 
+You may also be interested in [this repository containing the prompts and starter code for all previous years](https://github.com/dallen1959/Wittry_contest).
+
 ## Who is this for?
 These write-ups are targeted at students who wish to not only compete and do well in the Wittry competition and others like it, but also learn more about the Java programming language.
 These solutions should all be understandable to someone with two years of computer programming experience and a working knowledge of the Java language, but it does include a few solutions outside of the AP Computer Science A subset of the Java language.
